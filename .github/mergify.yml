@@ -1,0 +1,40 @@
+pull_request_rules:
+  - name: Add needs-dco label when DCO check failed
+    conditions:
+      - base=main
+      - -status-success=DCO
+    actions:
+      label:
+        remove:
+          - dco-passed
+        add:
+          - needs-dco
+  - name: Add dco-passed label when DCO check passed
+    conditions:
+      - base=main
+      - status-success=DCO
+    actions:
+      label:
+        remove:
+          - needs-dco
+        add:
+          - dco-passed
+
+  - name: Test passed when unit test passed on both ubuntu & macos
+    conditions:
+      - base=main
+      - "status-success=Unit Test on ubuntu-18.04"
+      - "status-success=Unit Test on macos-11"
+    actions:
+      label:
+        add:
+          - ci-passed
+
+  - name: Test passed for mergify changed
+      conditions:
+        - base=main
+        - -files~=^(?!\.github\/mergify\.yml).*$
+      actions:
+        label:
+          add:
+            - ci-passed
