@@ -19,6 +19,7 @@
 # Exit immediately for non zero status
 set -e
 
+
 UNAME="$(uname -s)"
 
 case "${UNAME}" in
@@ -29,15 +30,22 @@ case "${UNAME}" in
     *)          MACHINE="UNKNOWN:${UNAME}"
 esac
 
-echo "${MACHINE}"
+# Absolute path to the toplevel knowhere directory.
+toplevel=$(dirname "$(cd "$(dirname "${0}")"; pwd)")
+lib_file="cmake_build/knowhere/libknowhere.a"
 
-if [[ -x "$(command -v apt)" ]]; then
-    # for Ubuntu 18.04
-    sudo apt install -y g++ gcc make ccache libssl-dev zlib1g-dev libboost-regex-dev \
-        libboost-program-options-dev libboost-system-dev libboost-filesystem-dev \
-        libboost-serialization-dev python3-dev libboost-python-dev libcurl4-openssl-dev gfortran libtbb-dev
-fi
+pushd "${toplevel}"
+ 
+    if [[ "${MACHINE}" == "Mac"  ]]; then
+        ./build.sh -t Release
+     if [ ! -f "${lib_file}" ]; then
+        echo "There's no ${lib_file}, please check if build failed"
+        exit 1
+      else 
+        ls -lah  "${lib_file}"
+     fi
+    else
+        ./build.sh -t Release -u && cmake_build/unittest/test_knowhere
+    fi
 
-if [[ "${MACHINE}" == "Mac"  ]]; then
-    brew install boost libomp llvm ninja tbb
-fi
+popd
