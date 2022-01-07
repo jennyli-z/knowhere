@@ -29,13 +29,14 @@ case "${UNAME}" in
     *)          MACHINE="UNKNOWN:${UNAME}"
 esac
 
-echo "${MACHINE}"
 
-if [[ -x "$(command -v apt)" ]]; then
-    # for Ubuntu 18.04
-    sudo apt install -y g++ gcc make ccache libssl-dev zlib1g-dev libboost-regex-dev \
-        libboost-program-options-dev libboost-system-dev libboost-filesystem-dev \
-        libboost-serialization-dev python3-dev libboost-python-dev libcurl4-openssl-dev gfortran libtbb-dev
+if [[ "${MACHINE}" == "Linux"  ]]; then
+    if [[ -x "$(command -v apt)" ]]; then
+        # for Ubuntu 18.04
+        sudo apt install -y g++ gcc make ccache libssl-dev zlib1g-dev libboost-regex-dev \
+            libboost-program-options-dev libboost-system-dev libboost-filesystem-dev \
+            libboost-serialization-dev python3-dev libboost-python-dev libcurl4-openssl-dev gfortran libtbb-dev
+    fi
 fi
 
 if [[ "${MACHINE}" == "Mac"  ]]; then
