@@ -78,7 +78,7 @@ pull_request_rules:
   - name: Test passed for docs only
     conditions:
       - base=main
-      - -files~=^(?!.*\.(md)).*$ 
+      - -files~=^(?!.*\.(md|OWNERS)).*$ 
     actions:
       label:
         add:
